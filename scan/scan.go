@@ -45,8 +45,8 @@ func (s *ScanIp) GetIpOpenPort(ip string, port string) []int {
 	}
 	num = int(math.Ceil(float64(total) / float64(pageCount)))
 
-	s.sendLog(fmt.Sprintf("%v 【%v】需要扫描端口总数:%v 个，总协程:%v 个，每个协程处理:%v 个，超时时间:%v毫秒", time.Now().Format("2006-01-02 15:04:05"), ip, total, pageCount, num, s.timeout))
-	start := time.Now()
+	//s.sendLog(fmt.Sprintf("%v 【%v】需要扫描端口总数:%v 个，总协程:%v 个，每个协程处理:%v 个，超时时间:%v毫秒", time.Now().Format("2006-01-02 15:04:05"), ip, total, pageCount, num, s.timeout))
+	//start := time.Now()
 	all := map[int][]int{}
 	for i := 1; i <= pageCount; i++ {
 		for j := 0; j < num; j++ {
@@ -72,13 +72,13 @@ func (s *ScanIp) GetIpOpenPort(ip string, port string) []int {
 			mutex.Lock()
 			openPorts = append(openPorts, tmpPorts...)
 			mutex.Unlock()
-			if len(tmpPorts) > 0 {
-				s.sendLog(fmt.Sprintf("%v 【%v】协程%v 执行完成，时长： %.3fs，开放端口： %v", time.Now().Format("2006-01-02 15:04:05"), ip, key, time.Since(start).Seconds(), tmpPorts))
-			}
+			//if len(tmpPorts) > 0 {
+			//	s.sendLog(fmt.Sprintf("%v 【%v】协程%v 执行完成，时长： %.3fs，开放端口： %v", time.Now().Format("2006-01-02 15:04:05"), ip, key, time.Since(start).Seconds(), tmpPorts))
+			//}
 		}(v, k)
 	}
 	wg.Wait()
-	s.sendLog(fmt.Sprintf("%v 【%v】扫描结束，执行时长%.3fs , 所有开放的端口:%v", time.Now().Format("2006-01-02 15:04:05"), ip, time.Since(start).Seconds(), openPorts))
+	//s.sendLog(fmt.Sprintf("%v 【%v】扫描结束，执行时长%.3fs , 所有开放的端口:%v", time.Now().Format("2006-01-02 15:04:05"), ip, time.Since(start).Seconds(), openPorts))
 	return openPorts
 }
 
@@ -176,7 +176,6 @@ func (s *ScanIp) filterPort(str string) (int, error) {
 func (s *ScanIp) isOpen(ip string, port int) bool {
 	conn1, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Millisecond*time.Duration(s.timeout))
 	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Millisecond*time.Duration(s.timeout))
-	fmt.Println("1")
 	if err != nil {
 		if strings.Contains(err.Error(),"too many open files"){
 			fmt.Println("连接数超出系统限制！"+err.Error())
