@@ -15,7 +15,7 @@ var (
 	startTime = time.Now()
 	//ip        = flag.String("ip", "127.0.0.1", "ip地址 例如:-ip=192.168.0.1-255 或直接输入域名 xs25.cn")
 	port      = flag.String("p", "80", "端口号范围 例如:-p=80,81,88-1000")
-	path      = flag.String("path", "log", "日志地址 例如:-path=log")
+	//path      = flag.String("path", "log", "日志地址 例如:-path=log")
 	timeout   = flag.Int("t", 200, "超时时长(毫秒) 例如:-t=200")
 	process   = flag.Int("n", 100, "进程数 例如:-n=10")
 	h         = flag.Bool("h", false, "帮助信息")
