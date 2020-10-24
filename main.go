@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 	"encoding/json"
+	"strings"
 )
 
 var (
@@ -52,10 +53,15 @@ func main() {
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
 		cidr := sc.Text()
-		hosts, _ := lib.Hosts(cidr)
 		ips := []string{}
-		for _, ip := range hosts {
-			ips = append(ips, ip) //得到ip list 切片
+		if strings.Contains(cidr, "/"){
+			hosts, _ := lib.Hosts(cidr)
+			for _, ip := range hosts {
+				fmt.Println(ip)
+				ips = append(ips, ip) //得到ip list 切片
+			}
+		}else{
+			ips = append(ips, cidr)
 		}
 
 		fileName := "log/result.log"
@@ -73,7 +79,7 @@ func main() {
 					IP: ips[i],
 					Ports: ports,
 				}
-				fmt.Println("struct: ", ipinfo)
+
 				jsonBytes, err := json.Marshal(ipinfo)
 				if err != nil {
 					fmt.Println(err)
