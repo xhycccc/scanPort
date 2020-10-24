@@ -39,7 +39,7 @@ func main() {
 	fmt.Printf("========== Start %v  ==================== \n", time.Now().Format("2006-01-02 15:04:05"))
 
 	//创建目录
-	lib.Mkdir(*path)
+	//lib.Mkdir(*path)
 
 	//初始化
 	scanIP:=scan.NewScanIp(*timeout,*process,true)
