@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/xinhaiyucheng/scanPort/lib"
-	"github.com/xinhaiyucheng/scanPort/scan"
+	"scanPort/lib"
+	"scanPort/scan"
 	"os"
 	"time"
 	"encoding/json"
@@ -14,13 +14,12 @@ import (
 
 var (
 	startTime = time.Now()
-	//ip        = flag.String("ip", "127.0.0.1", "ip地址 例如:-ip=192.168.0.1-255 或直接输入域名 xs25.cn")
 	port      = flag.String("p", "80", "端口号范围 例如:-p=80,81,88-1000")
-	//path      = flag.String("path", "log", "日志地址 例如:-path=log")
+	ping 	  = flag.Bool("ping", true, "是否探测主机存活")
 	timeout   = flag.Int("t", 200, "超时时长(毫秒) 例如:-t=200")
 	process   = flag.Int("n", 100, "进程数 例如:-n=10")
 	h         = flag.Bool("h", false, "帮助信息")
-	//ipfile      = flag.Bool("file", false, "ip文件")
+
 )
 
 type IpInfo struct{
@@ -57,15 +56,19 @@ func main() {
 		if strings.Contains(cidr, "/"){
 			hosts, _ := lib.Hosts(cidr)
 			for _, ip := range hosts {
-				fmt.Println(ip)
 				ips = append(ips, ip) //得到ip list 切片
 			}
 		}else{
-			ips = append(ips, cidr)
+			ips = append(ips, cidr) //单个ip
 		}
 
 		fileName := "log/result.log"
 		for i := 0; i < len(ips); i++ {
+			if *ping && !lib.Ping(ips[i]){ //ping判断是否存活
+				fmt.Println(ips[i]," 不存活")
+				continue
+			}
+
 			ports := scanIP.GetIpOpenPort(ips[i], *port)
 			if len(ports) > 0 {
 				f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
