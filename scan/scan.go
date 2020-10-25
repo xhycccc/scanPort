@@ -174,9 +174,17 @@ func (s *ScanIp) filterPort(str string) (int, error) {
 
 //查看端口号是否打开
 func (s *ScanIp) isOpen(ip string, port int) bool {
-	conn1, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Millisecond*time.Duration(s.timeout))
-	conn1.Close()
 	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Millisecond*time.Duration(s.timeout))
+	if err != nil {
+		if strings.Contains(err.Error(),"too many open files"){
+			fmt.Println("连接数超出系统限制！"+err.Error())
+			os.Exit(1)
+		}
+		return false
+	}
+	_ = conn.Close()
+
+	conn, err = net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Millisecond*time.Duration(s.timeout))
 	if err != nil {
 		if strings.Contains(err.Error(),"too many open files"){
 			fmt.Println("连接数超出系统限制！"+err.Error())
