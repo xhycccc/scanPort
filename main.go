@@ -38,37 +38,49 @@ func main() {
 
 	fmt.Printf("========== Start %v  ==================== \n", time.Now().Format("2006-01-02 15:04:05"))
 
-	//创建目录
-	//lib.Mkdir(*path)
-
 	//初始化
 	scanIP:=scan.NewScanIp(*timeout,*process,true)
-
-	file, err := os.Open("conf/ip.txt")
+	fileName := "log/result.log"				//结果文件
+	file, err := os.Open("conf/ip.txt")	//扫描ip文件
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer file.Close()
+
+	//遍历扫描文件ip.txt
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
 		cidr := sc.Text()
 		ips := []string{}
+		//处理cidr格式，如192.168.1.0/24
 		if strings.Contains(cidr, "/"){
 			hosts, _ := lib.Hosts(cidr)
 			for _, ip := range hosts {
-				ips = append(ips, ip) //得到ip list 切片
+				ips = append(ips, ip)
 			}
-		}else{
+		}else if strings.Contains(cidr, "-"){
+			//处理 192.168.1.0-24 格式
+			ips, err = scanIP.GetAllIp(cidr)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+		} else{
+			//处理单个ip格式
 			ips = append(ips, cidr) //单个ip
 		}
 
-		fileName := "log/result.log"
+		//遍历ip数组
 		for i := 0; i < len(ips); i++ {
-			if *ping && !lib.Ping(ips[i]){ //ping判断是否存活
-				fmt.Println(ips[i]," 不存活")
+
+			//ping判断是否存活
+			if *ping && !lib.Ping(ips[i]){
+				//fmt.Println(ips[i]," 不存活")
 				continue
 			}
+			fmt.Println(ips[i]," 存活")
 
+			//获取扫描结果
 			ports := scanIP.GetIpOpenPort(ips[i], *port)
 			if len(ports) > 0 {
 				f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -78,15 +90,18 @@ func main() {
 					}
 					continue
 				}
+				//构造扫描结果结构体
 				ipinfo := IpInfo{
 					IP: ips[i],
 					Ports: ports,
 				}
-
+				//结构体转json格式
 				jsonBytes, err := json.Marshal(ipinfo)
 				if err != nil {
 					fmt.Println(err)
 				}
+
+				//写入结果文件
 				var str = fmt.Sprintf("%v\n", string(jsonBytes))
 				if _, err := f.WriteString(str); err != nil {
 					if err := f.Close(); err != nil {
@@ -97,15 +112,5 @@ func main() {
 			}
 		}
 	}
-
-	/*
-	ips, err := scanIP.GetAllIp(*ip)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}*/
-	//log
-
 	fmt.Printf("========== End %v 总执行时长：%.2fs ================ \n", time.Now().Format("2006-01-02 15:04:05"), time.Since(startTime).Seconds())
-
 }
