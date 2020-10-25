@@ -40,6 +40,7 @@ func main() {
 
 	//初始化
 	scanIP:=scan.NewScanIp(*timeout,*process,true)
+	lib.Mkdir("log")
 	fileName := "log/result.log"				//结果文件
 	file, err := os.Open("conf/ip.txt")	//扫描ip文件
 	if err != nil {
