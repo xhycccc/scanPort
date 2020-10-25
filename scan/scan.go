@@ -119,8 +119,6 @@ func (s *ScanIp) GetAllIp(ip string) ([]string, error) {
 	return ips, nil
 }
 
-
-
 //记录日志
 func (s *ScanIp) sendLog(str string) {
 	if s.debug == true {
