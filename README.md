@@ -7,6 +7,11 @@
 4. 增加扫描前使用ping探测主机存活
 5. 修改为将结果转化成json写入log文件。
 
+### TODO
+
+- [ ] 增加取消ping选项
+- [ ] 增加识别web服务功能
+
 ### Usage
 ```
 scanPort -h 
