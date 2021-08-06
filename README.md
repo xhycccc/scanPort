@@ -13,6 +13,7 @@
 - [ ] 增加识别web服务功能
 - [ ] 增加不存在日志文件提醒（需要创建log/result.log，不然报错invalid argument）
 - [ ] 增加随机IP和随机端口扫描探测功能
+- [ ] 支持自定义输出格式
 
 ### Usage
 ```
@@ -30,7 +31,6 @@ Options:
         是否探测主机存活 (default true)
   -t int
         超时时长(毫秒) 例如:-t=200 (default 200)
-
 ```
 
 #### 例1：扫描conf/ip.txt，指定端口号扫描，使用1000个协程进行
