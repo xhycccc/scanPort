@@ -5,23 +5,29 @@
 2. 增加支持扫描IP段、IP范围"-"。如 192.168.1.0/24，192.168.1.0-24
 3. 修改为从文件读取目标进行扫描。默认扫描conf/ip.txt文件中的目标
 4. 增加扫描前使用ping探测主机存活
-5. 修改为将结果转化成json写入log文件。
+5. 修改为将结果转化成json写入log文件
+6. 增加取消ping选项
 
 ### TODO
 
-- [ ] 增加取消ping选项
 - [ ] 增加识别web服务功能
 - [ ] 增加不存在日志文件提醒（需要创建log/result.log，不然报错invalid argument）
 - [ ] 增加随机IP和随机端口扫描探测功能
+
 ### Usage
 ```
 scanPort -h 
+scanPort version: scanPort/1.10.0
+Usage: scanPort [-h] [-ip ip地址] [-n 进程数] [-p 端口号范围] [-t 超时时长] [-path 日志保存路径]
+
 Options:
   -h    帮助信息
   -n int
         进程数 例如:-n=10 (default 100)
   -p string
         端口号范围 例如:-p=80,81,88-1000 (default "80")
+  -ping
+        是否探测主机存活 (default true)
   -t int
         超时时长(毫秒) 例如:-t=200 (default 200)
 
