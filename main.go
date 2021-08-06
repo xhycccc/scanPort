@@ -19,7 +19,6 @@ var (
 	timeout   = flag.Int("t", 200, "超时时长(毫秒) 例如:-t=200")
 	process   = flag.Int("n", 100, "进程数 例如:-n=10")
 	h         = flag.Bool("h", false, "帮助信息")
-
 )
 
 type IpInfo struct{
