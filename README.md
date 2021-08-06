@@ -11,7 +11,7 @@
 
 - [ ] 增加取消ping选项
 - [ ] 增加识别web服务功能
-
+- [ ] 增加不存在日志文件提醒（需要创建log/result.log，不然报错invalid argument）
 ### Usage
 ```
 scanPort -h 
