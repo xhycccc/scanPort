@@ -4,34 +4,29 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"os"
 	"scanPort/lib"
 	"scanPort/scan"
-	"os"
-	"time"
-	"encoding/json"
 	"strings"
+	"time"
 )
 
 var (
 	startTime = time.Now()
+	help      = flag.Bool("h", false, "帮助信息")
 	port      = flag.String("p", "80", "端口号范围 例如:-p=80,81,88-1000")
-	ping 	  = flag.Bool("ping", true, "是否探测主机存活")
+	ping 	  = flag.Bool("ping", true, "是否使用ping探测主机存活")
 	timeout   = flag.Int("t", 200, "超时时长(毫秒) 例如:-t=200")
-	process   = flag.Int("n", 100, "进程数 例如:-n=10")
-	h         = flag.Bool("h", false, "帮助信息")
+	process   = flag.Int("n", 100, "进程数 例如:-n=100")
+	format    = flag.String("f", "json", "输出格式支持json, txt。默认为json")
 )
-
-type IpInfo struct{
-	IP string `json:"ipaddr"`
-	Ports  []int `json:"ports"`
-}
 
 //go run main.go -h
 func main() {
 	flag.Parse()
 	//帮助信息
-	if *h == true {
-		lib.Usage("scanPort version: scanPort/1.10.0\n Usage: scanPort [-h] [-ip ip地址] [-n 进程数] [-p 端口号范围] [-t 超时时长] [-path 日志保存路径]\n\nOptions:\n")
+	if *help == true {
+		lib.Usage("scanPort version: scanPort/1.10.0\n Usage: scanPort [-h] [-p 端口号范围] [-n 进程数] [-t 超时时长] [-ping 是否开启ping] [-f 输出格式]\n\nOptions:\n")
 		return
 	}
 
@@ -39,8 +34,6 @@ func main() {
 
 	//初始化
 	scanIP:=scan.NewScanIp(*timeout,*process,true)
-	lib.Mkdir("log")
-	fileName := "result.log"				//结果文件
 	file, err := os.Open("conf/ip.txt")	//扫描ip文件
 	if err != nil {
 		fmt.Println(err)
@@ -82,34 +75,14 @@ func main() {
 
 			//获取扫描结果
 			ports := scanIP.GetIpOpenPort(ips[i], *port)
-			if len(ports) > 0 {
-				f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-				if err != nil {
-					if err := f.Close(); err != nil {
-						fmt.Println(err)
-					}
-					continue
-				}
-				//构造扫描结果结构体
-				ipinfo := IpInfo{
-					IP: ips[i],
-					Ports: ports,
-				}
-				//结构体转json格式
-				jsonBytes, err := json.Marshal(ipinfo)
-				if err != nil {
-					fmt.Println(err)
-				}
-
-				//写入结果文件
-				var str = fmt.Sprintf("%v\n", string(jsonBytes))
-				if _, err := f.WriteString(str); err != nil {
-					if err := f.Close(); err != nil {
-						fmt.Println(err)
-					}
-					continue
-				}
+			if *format == "json" {
+				lib.WriteJsonResults(ips[i], ports)
+			}else if(*format == "txt"){
+				lib.WriteTxtResults(ips[i], ports)
+			}else {
+				lib.WriteJsonResults(ips[i], ports)
 			}
+
 		}
 	}
 	fmt.Printf("========== End %v 总执行时长：%.2fs ================ \n", time.Now().Format("2006-01-02 15:04:05"), time.Since(startTime).Seconds())
