@@ -15,7 +15,7 @@ var (
 	startTime = time.Now()
 	help      = flag.Bool("h", false, "帮助信息")
 	port      = flag.String("p", "80", "端口号范围 例如:-p=80,81,88-1000")
-	ping 	  = flag.Bool("ping", true, "是否使用ping探测主机存活")
+	nping 	  = flag.Bool("nping", false, "是否禁用ping探测主机存活")
 	timeout   = flag.Int("t", 200, "超时时长(毫秒) 例如:-t=200")
 	process   = flag.Int("n", 100, "进程数 例如:-n=100")
 	format    = flag.String("f", "json", "输出格式支持json, txt。默认为json")
@@ -67,7 +67,7 @@ func main() {
 		for i := 0; i < len(ips); i++ {
 
 			//ping判断是否存活
-			if *ping && !lib.Ping(ips[i]){
+			if !*nping && !lib.Ping(ips[i]){
 				//fmt.Println(ips[i]," 不存活")
 				continue
 			}

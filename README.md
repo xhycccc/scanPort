@@ -7,13 +7,14 @@
 4. 增加扫描前使用ping探测主机存活
 5. 修改为将结果转化成json写入log文件
 6. 增加取消ping选项
+7. 支持自定义输出格式
 
 ### TODO
 
-- [ ] 增加识别web服务功能
-- [ ] 增加不存在日志文件提醒（需要创建log/result.log，不然报错invalid argument）
+- [ ] 增加不存在日志文件提醒（需要创建result.log，不然报错invalid argument）
 - [ ] 增加随机IP和随机端口扫描探测功能
-- [ ] 支持自定义输出格式
+- [ ] 分布式
+
 
 ### Usage
 ```
