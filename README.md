@@ -15,26 +15,25 @@
 - [ ] 增加随机IP和随机端口扫描探测功能
 - [ ] 分布式
 
-
 ### Usage
+
 ```
 scanPort -h 
 scanPort version: scanPort/1.10.0
- Usage: scanPort [-h] [-p 端口号范围] [-n 进程数] [-t 超时时长] [-ping 是否开启ping] [-f 输出格式]
+ Usage: scanPort [-h] [-p 端口号范围] [-n 协程数] [-t 超时时长] [-nping 是否禁用ping] [-f 输出格式]
 
 Options:
   -f string
         输出格式支持json, txt。默认为json (default "json")
   -h    帮助信息
   -n int
-        进程数 例如:-n=10 (default 100)
+        进程数 例如:-n=100 (default 100)
+  -nping
+        是否禁用ping探测主机存活
   -p string
         端口号范围 例如:-p=80,81,88-1000 (default "80")
-  -ping
-        是否探测主机存活 (default true)
   -t int
-        超时时长(毫秒) 例如:-t=200 (default 200)
-
+        超时时长(毫秒) 例如:-t=200 (default 200) 
 ```
 
 #### 例1：扫描conf/ip.txt，指定端口号扫描，使用1000个协程进行

@@ -26,7 +26,7 @@ func main() {
 	flag.Parse()
 	//帮助信息
 	if *help == true {
-		lib.Usage("scanPort version: scanPort/1.10.0\n Usage: scanPort [-h] [-p 端口号范围] [-n 进程数] [-t 超时时长] [-ping 是否开启ping] [-f 输出格式]\n\nOptions:\n")
+		lib.Usage("scanPort version: scanPort/1.10.0\n Usage: scanPort [-h] [-p 端口号范围] [-n 进程数] [-t 超时时长] [-nping 是否禁用ping] [-f 输出格式]\n\nOptions:\n")
 		return
 	}
 
