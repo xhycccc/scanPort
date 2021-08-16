@@ -1,0 +1,17 @@
+# IP白名单
+WHITE_LIST: []
+
+# 扫描时间设置
+TIME_START: 23:00     # 开始时间
+TIME_LONG: 8          # 持续时长(hour)
+
+# 扫描设置
+SCAN_IP_FILE: conf/ip.txt     # 扫描ip文件
+SCAN_PORT: 1-65535            # 扫描端口
+SCAN_THREAD: 200              # 协程数
+SCAN_NO_PING: false           # 是否开启禁ping
+SCAN_TIMEOUT: 200             # 超时时长
+SCAN_TWICE: true              # 是否扫描两次端口
+
+# 输出设置
+OUT_FORMAT: json      # 输出格式，有json和txt
